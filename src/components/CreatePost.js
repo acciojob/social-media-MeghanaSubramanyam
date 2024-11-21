@@ -1,27 +1,32 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPost } from '../redux/actions';
 
-function CreatePost({ onAddPost }) {
-    const [author, setAuthor] = useState('');
+const CreatePost = () => {
+    const users = useSelector(state => state.users);
+    const dispatch = useDispatch();
+
+    const [author, setAuthor] = useState(users[0]);
     const [content, setContent] = useState('');
 
     const handleSubmit = () => {
-        onAddPost({ author, content });
-        setAuthor('');
+        dispatch(addPost({ id: Date.now(), author, content }));
         setContent('');
+        alert('Post created successfully!');
     };
 
     return (
         <div>
             <h2>Create Post</h2>
-            <select id="postAuthor" value={author} onChange={(e) => setAuthor(e.target.value)}>
-                <option value="">Select Author</option>
-                <option value="John">John</option>
-                <option value="Jane">Jane</option>
+            <select value={author} onChange={(e) => setAuthor(e.target.value)}>
+                {users.map(user => (
+                    <option key={user} value={user}>{user}</option>
+                ))}
             </select>
-            <textarea id="postContent" value={content} onChange={(e) => setContent(e.target.value)} />
+            <textarea value={content} onChange={(e) => setContent(e.target.value)} />
             <button onClick={handleSubmit}>Add Post</button>
         </div>
     );
-}
+};
 
 export default CreatePost;

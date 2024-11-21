@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addNotification } from '../redux/actions';
 
-function Notifications() {
-    const [notifications, setNotifications] = useState([]);
-
-    const fetchNotifications = () => {
-        setNotifications(['New post by John', 'Jane reacted to your post']);
-    };
+const Notifications = () => {
+    const notifications = useSelector(state => state.notifications);
+    const dispatch = useDispatch();
 
     return (
         <div>
             <h2>Notifications</h2>
-            <button className="button" onClick={fetchNotifications}>Refresh Notifications</button>
+            <button onClick={() => dispatch(addNotification(`New notification at ${new Date().toLocaleTimeString()}`))}>
+                Refresh Notifications
+            </button>
             <ul>
-                {notifications.map((notification, index) => (
-                    <li key={index}>{notification}</li>
+                {notifications.map((note, idx) => (
+                    <li key={idx}>{note}</li>
                 ))}
             </ul>
         </div>
     );
-}
+};
 
 export default Notifications;
