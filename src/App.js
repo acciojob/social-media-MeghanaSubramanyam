@@ -1,30 +1,47 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import store from './redux/store';
-import Home from './components/Home';
-import Users from './components/Users';
-import Notifications from './components/Notifications';
-import CreatePost from './components/CreatePost';
+import React from 'react'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom'
+
+import { Navbar } from './app/Navbar'
+
+import { PostsList } from './features/posts/PostsList'
+import { AddPostForm } from './features/posts/AddPostForm'
+import { EditPostForm } from './features/posts/EditPostForm'
+import { SinglePostPage } from './features/posts/SinglePostPage'
+import { UsersList } from './features/users/UsersList'
+import { UserPage } from './features/users/UserPage'
+import { NotificationsList } from './features/notifications/NotificationsList'
 
 function App() {
-    const [tab, setTab] = React.useState('home');
-
-    return (
-        <Provider store={store}>
-            <nav>
-                <button onClick={() => setTab('home')}>Home</button>
-                <button onClick={() => setTab('users')}>Users</button>
-                <button onClick={() => setTab('notifications')}>Notifications</button>
-                <button onClick={() => setTab('createPost')}>Create Post</button>
-            </nav>
-            {tab === 'home' && <Home />}
-            {tab === 'users' && <Users />}
-            {tab === 'notifications' && <Notifications />}
-            {tab === 'createPost' && <CreatePost />}
-        </Provider>
-    );
+  return (
+    <Router>
+      <Navbar />
+      <div className="App">
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <React.Fragment>
+                <AddPostForm />
+                <PostsList />
+              </React.Fragment>
+            )}
+          />
+          <Route exact path="/posts/:postId" component={SinglePostPage} />
+          <Route exact path="/editPost/:postId" component={EditPostForm} />
+          <Route exact path="/users" component={UsersList} />
+          <Route exact path="/users/:userId" component={UserPage} />
+          <Route exact path="/notifications" component={NotificationsList} />
+          <Redirect to="/" />
+        </Switch>
+      </div>
+    </Router>
+  )
 }
 
-export default App;
-
-
+export default App
